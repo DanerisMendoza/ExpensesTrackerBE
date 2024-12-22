@@ -1,0 +1,109 @@
+# openapi: 3.0.0
+# info:
+#   title: Expenses API
+#   version: 1.0.0
+# servers:
+# - url: http://localhost:9000/api
+#   description: Development server
+paths:
+  /getAllExpenses:
+    get:
+      tags:
+        - Expenses
+      responses:
+        '200':
+          description: Successfully retrieved expenses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Unique identifier for the expense.
+                    name:
+                      type: string
+                      description: Name or description of the expense.
+                    amount:
+                      type: number
+                      description: Expense amount.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message explaining the failure.
+  /createExpenses:
+    post:
+      tags:
+        - Expenses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - title
+                - amount
+              properties:
+                user_id:
+                  type: string
+                  description: Unique identifier for the user associated with the expense.
+                title:
+                  type: string
+                  description: Title or description of the expense.
+                amount:
+                  type: number
+                  description: Amount of the expense.
+      responses:
+        '200':
+          description: Expense created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Success message.
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Unique identifier of the created expense.
+                      user_id:
+                        type: string
+                        description: User ID associated with the expense.
+                      title:
+                        type: string
+                        description: Title or description of the expense.
+                      amount:
+                        type: number
+                        description: Amount of the expense.
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: Timestamp when the expense was created.
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: Timestamp when the expense was last updated.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message explaining the failure.

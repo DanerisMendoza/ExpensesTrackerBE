@@ -1,0 +1,80 @@
+# openapi: 3.0.0
+# info:
+#   title: Authentication API
+#   description: API documentation for user authentication endpoints.
+#   version: 1.0.0
+# servers:
+#   - url: http://localhost:9000/api
+#     description: Development server
+paths:
+  /login:
+    post:
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: The username of the user.
+                  example: nikol
+                password:
+                  type: string
+                  description: The password of the user.
+                  example: 123456
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    description: The access token for the user session.
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  refreshToken:
+                    type: string
+                    description: The refresh token for session renewal.
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  status:
+                    type: integer
+                    example: 200
+        '401':
+          description: Invalid password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid password
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error

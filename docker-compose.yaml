@@ -1,0 +1,22 @@
+name: node-react-template
+services:
+  backend:
+    build: ./
+    container_name: node-express-ts-template
+    ports:
+      - "9000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+
+  frontend:
+    build: ../react-vite-mantine-template
+    container_name: react-vite-mantine-template
+    ports:
+      - "8000:5173"
+    volumes:
+      - ../react-vite-mantine-template:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_BASE_URL=http://localhost:9000/
+      - NODE_ENV=development

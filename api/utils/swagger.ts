@@ -30,12 +30,12 @@ interface Server {
 }
 
 const loadSwaggerFiles = (): SwaggerDocument => {
-  const apiDir = path.join(__dirname, '../api');
-  const modules = fs.readdirSync(apiDir);
+  const modulesDir = path.join(__dirname, '../modules');
+  const modules = fs.readdirSync(modulesDir);
 
   const swaggerDocs: SwaggerDocument[] = modules
     .map((module) => {
-      const swaggerPath = path.join(apiDir, module, 'swagger.yaml');
+      const swaggerPath = path.join(modulesDir, module, 'swagger.yaml');
       if (fs.existsSync(swaggerPath)) {
         return YAML.load(swaggerPath) as SwaggerDocument;
       }

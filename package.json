@@ -4,7 +4,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "nodemon src/index.ts",
+    "start": "nodemon api/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -28,7 +28,7 @@
     "nodemon": "^3.1.0",
     "objection": "^3.1.4",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1",
+    "swagger-ui-express": "^4.3.0",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",

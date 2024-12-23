@@ -3,18 +3,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
-const jwt = require("jsonwebtoken");
-const path = require("path");
 const PORT = process.env.PORT || 3000;
 
 // modules route
-import userRoute from './api/user'
-import expensesRoute from './api/expenses'
+import userRoute from './modules/user'
+import expensesRoute from './modules/expenses'
 
 // swagger config
 import swaggerUi from 'swagger-ui-express';
 import loadSwaggerFiles from './utils/swagger';
 const swaggerDocument = loadSwaggerFiles();
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -26,7 +25,11 @@ app.use(
 );
 
 // Serve Swagger UI
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  customCss:
+    '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }', 
+    customCssUrl: CSS_URL
+}));
 
 // Web View Route
 app.get('/', (req, res) => {

@@ -6,6 +6,7 @@ const router = express.Router();
 import { UserModel } from './model'
 import { checkFileType, storage, upload } from '../../utils/upload'
 import verifyToken from '../../utils/auth'
+import { permissionsTypes } from './types';
 
 router.post('/login', upload.none(),
     async (req, res) => {
@@ -82,7 +83,7 @@ router.post('/createUser', upload.none(),
         });
     });
 
-router.get('/getUsers', upload.none(), verifyToken([0]), 
+router.get('/getUsers', upload.none(), verifyToken([permissionsTypes.admin]), 
     async (req, res) => {
         UserModel.find({}).then((result) => {
             return res.json(result)

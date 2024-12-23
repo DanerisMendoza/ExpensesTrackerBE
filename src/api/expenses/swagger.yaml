@@ -1,10 +1,3 @@
-# openapi: 3.0.0
-# info:
-#   title: Expenses API
-#   version: 1.0.0
-# servers:
-# - url: http://localhost:9000/api
-#   description: Development server
 paths:
   /getAllExpenses:
     get:

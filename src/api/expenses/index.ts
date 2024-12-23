@@ -4,9 +4,10 @@ const express = require('express');
 const router = express.Router();
 
 import { ExpensesModel } from './model'
-import { checkFileType, storage, upload } from '../../upload'
+import { checkFileType, storage, upload } from '../../utils/upload'
+import verifyToken from '../../utils/auth'
 
-router.get('/getAllExpenses', upload.none(),
+router.get('/getAllExpenses', upload.none(), verifyToken([0,1]),
     async (req, res) => {
         try {
             const Expenses = await ExpensesModel.find();

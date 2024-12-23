@@ -8,15 +8,25 @@ interface SwaggerDocument {
     title: string;
     version: string;
   };
-  servers:server[]
+  servers: Server[];
   paths: {
     [key: string]: object;
   };
+  components?: {
+    securitySchemes?: {
+      [key: string]: {
+        type: string;
+        scheme: string;
+        bearerFormat?: string;
+      };
+    };
+  };
+  security?: { [key: string]: string[] }[];
 }
 
-interface server {
-  url: string,
-  description: string,
+interface Server {
+  url: string;
+  description: string;
 }
 
 const loadSwaggerFiles = (): SwaggerDocument => {
@@ -44,15 +54,28 @@ const loadSwaggerFiles = (): SwaggerDocument => {
     servers: [
       {
         url: 'http://localhost:9000/api',
-        description: 'docker server'
+        description: 'docker server',
       },
       {
         url: 'http://localhost:3000/api',
-        description: 'local server'
-      }
+        description: 'local server',
+      },
     ],
-    
     paths: mergedPaths,
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT', // Optional, adds clarity for the token format
+        },
+      },
+    },
+    security: [
+      {
+        BearerAuth: [],
+      },
+    ],
   };
 };
 

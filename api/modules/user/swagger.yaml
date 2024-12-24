@@ -70,6 +70,76 @@ paths:
                   message:
                     type: string
                     example: Internal server error
+  /refreshToken:
+    post:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  description: The refresh token issued to the user.
+              required:
+                - refreshToken
+      responses:
+        "200":
+          description: A new access token was successfully generated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    description: The new access token.
+                  status:
+                    type: integer
+                    example: 200
+        "400":
+          description: Bad Request. The refresh token is missing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Refresh token is required
+        "403":
+          description: Forbidden. The refresh token is invalid or expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid or expired refresh token
+        "404":
+          description: Not Found. The user associated with the refresh token was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        "500":
+          description: Internal Server Error. An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
   /createUser:
       post:
         tags:

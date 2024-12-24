@@ -208,8 +208,6 @@ paths:
                     example: "Server Error"
   /deleteAllUsers:
     delete:
-      summary: Delete all users
-      description: This endpoint deletes all users from the database.
       operationId: deleteAllUsers
       tags:
         - User
@@ -244,3 +242,41 @@ paths:
                   message:
                     type: string
                     example: "Server Error"
+  /deleteNonAdminUsers:
+      delete:
+        tags:
+          - User
+        responses:
+          200:
+            description: All non-admin users deleted successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: All users except admin deleted successfully
+                    deletedCount:
+                      type: integer
+                      example: 5
+          404:
+            description: No users found to delete except admin
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: No users found to delete except admin
+          500:
+            description: Server error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Server Error

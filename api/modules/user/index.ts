@@ -20,8 +20,8 @@ router.post('/login', upload.none(),
             bcrypt.compare(password, user.password)
                 .then((isPasswordValid) => {
                     if (isPasswordValid) {
-                        const accessToken = jwt.sign({ id: user._id, name: user.name, email: user.email, username: user.username, role: user.role, profile_pic_path: user.profile_pic_path }, 'secretKey', { expiresIn: '30m' });
-                        const refreshToken = jwt.sign({ id: user._id, name: user.name, email: user.email, username: user.username, role: user.role, profile_pic_path: user.profile_pic_path }, 'secretKey', { expiresIn: '7d' });
+                        const accessToken = jwt.sign({ id: user._id, name: user.name, email: user.email, username: user.username, role: user.role, profile_pic_path: user.profile_pic_path }, 'secretKey', { expiresIn: '15m' });
+                        const refreshToken = jwt.sign({ id: user._id }, 'danerisAccessSecretKey', { expiresIn: '7d' });
                         res.json({ accessToken, refreshToken, status: 200 });
                     }
                     else {
@@ -38,6 +38,47 @@ router.post('/login', upload.none(),
         }
     });
 
+router.post('/refreshToken', async (req, res) => {
+    try {
+        const { refreshToken } = req.body;
+        if (!refreshToken) {
+            return res.status(400).json({ message: 'Refresh token is required' });
+        }
+
+        // Verify the refresh token
+        jwt.verify(refreshToken, 'danerisAccessSecretKey', async (err, decoded) => {
+            if (err) {
+                return res.status(403).json({ message: 'Invalid or expired refresh token' });
+            }
+
+            // Find the user associated with the refresh token
+            const user = await UserModel.findById(decoded.id);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Generate a new access token
+            const accessToken = jwt.sign(
+                {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    username: user.username,
+                    role: user.role,
+                    profile_pic_path: user.profile_pic_path
+                },
+                'secretKey',
+                { expiresIn: '15m' }
+            );
+
+            return res.json({ accessToken, status: 200 });
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 
 router.post('/createUser', upload.none(),
     async (req, res) => {
@@ -53,9 +94,9 @@ router.post('/createUser', upload.none(),
                     if (existingUser) {
                         console.log(existingUser)
                         if (existingUser.username === username) {
-                            return res.status(400).json({ message: 'Username already exists!' });
+                            return res.status(409).json({ message: 'Username already exists!' });
                         } else if (existingUser.email === email) {
-                            return res.status(400).json({ message: 'Email already exists!' });
+                            return res.status(409).json({ message: 'Email already exists!' });
                         }
                     } else {
                         const newUser = new UserModel({
@@ -63,7 +104,7 @@ router.post('/createUser', upload.none(),
                             username,
                             email,
                             password: hashedPassword,
-                            role,
+                            role: role && role.length > 0 ? role : [1],
                             profile_pic_path: '',
                         });
                         newUser.save()
@@ -83,7 +124,7 @@ router.post('/createUser', upload.none(),
         });
     });
 
-router.get('/getUsers', upload.none(), verifyToken([permissionsTypes.admin]), 
+router.get('/getUsers', upload.none(), verifyToken([permissionsTypes.admin]),
     async (req, res) => {
         UserModel.find({}).then((result) => {
             return res.json(result)
@@ -92,19 +133,36 @@ router.get('/getUsers', upload.none(), verifyToken([permissionsTypes.admin]),
         })
     });
 
-router.delete('/deleteAllUsers', upload.none(),
+router.delete('/deleteAllUsers', upload.none(), verifyToken([permissionsTypes.admin]),
     async (req, res) => {
         UserModel.deleteMany({})
-        .then(deletedUsers => {
-          if (deletedUsers.deletedCount === 0) {
-            return res.status(404).json({ message: 'No users found' });
-          }
-          return res.json({ message: 'All users deleted successfully' });
-        })
-        .catch(error => {
-          console.error(error);
-          return res.status(500).json({ message: 'Server Error' });
-        });
+            .then(deletedUsers => {
+                if (deletedUsers.deletedCount === 0) {
+                    return res.status(404).json({ message: 'No users found' });
+                }
+                return res.json({ message: 'All users deleted successfully' });
+            })
+            .catch(error => {
+                console.error(error);
+                return res.status(500).json({ message: 'Server Error' });
+            });
     });
+
+router.delete('/deleteNonAdminUsers', upload.none(), verifyToken([permissionsTypes.admin]),
+    async (req, res) => {
+        UserModel.deleteMany({ username: { $ne: 'admin' } })
+            .then(deletedUsers => {
+                if (deletedUsers.deletedCount === 0) {
+                    return res.status(404).json({ message: 'No users found to delete except admin' });
+                }
+                return res.json({ message: 'All users except admin deleted successfully', deletedCount: deletedUsers.deletedCount });
+            })
+            .catch(error => {
+                console.error(error);
+                return res.status(500).json({ message: 'Server Error' });
+            });
+    });
+
+
 
 export default router; 

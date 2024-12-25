@@ -43,19 +43,17 @@ paths:
             schema:
               type: object
               required:
-                - user_id
                 - title
                 - amount
               properties:
-                user_id:
-                  type: string
-                  description: Unique identifier for the user associated with the expense.
                 title:
                   type: string
                   description: Title or description of the expense.
+                  example: water bill
                 amount:
                   type: number
                   description: Amount of the expense.
+                  example: 200
       responses:
         '200':
           description: Expense created successfully.
@@ -100,3 +98,19 @@ paths:
                   error:
                     type: string
                     description: Error message explaining the failure.
+  /deleteAllExpenses:
+    delete:
+      tags:
+        - Expenses
+      responses:
+        '200':
+          description: All expenses deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Server error

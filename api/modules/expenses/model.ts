@@ -7,7 +7,7 @@ const ExpensesSchema = new mongoose.Schema({
     user_id: String,
     title: String,
     amount: Number,
-})
+}, { timestamps: true })
 const ExpensesModel = mongoose.model("expenses", ExpensesSchema)
 
 export { ExpensesModel, ExpensesSchema };

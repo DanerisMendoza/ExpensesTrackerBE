@@ -4,8 +4,8 @@ const express = require('express');
 const router = express.Router();
 
 import { UserModel } from './model'
-import { checkFileType, storage, upload } from '../../utils/upload'
-import verifyToken from '../../utils/auth'
+import { checkFileType, storage, upload } from '@api/utils/upload'
+import verifyToken from '@api/utils/auth'
 import { permissionsTypes } from './types';
 
 router.post('/login', upload.none(),

@@ -32,6 +32,43 @@ paths:
                   error:
                     type: string
                     description: Error message explaining the failure.
+  
+  /getAllExpenses/me:
+    get:
+      tags:
+        - Expenses
+      responses:
+        '200':
+          description: Successfully retrieved expenses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Unique identifier for the expense.
+                    name:
+                      type: string
+                      description: Name or description of the expense.
+                    amount:
+                      type: number
+                      description: Expense amount.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message explaining the failure.
+  
+  
+
   /createExpenses:
     post:
       tags:

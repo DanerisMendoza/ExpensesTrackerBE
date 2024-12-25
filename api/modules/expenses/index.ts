@@ -4,9 +4,9 @@ const express = require('express');
 const router = express.Router();
 
 import { ExpensesModel } from './model'
-import { checkFileType, storage, upload } from '../../utils/upload'
-import verifyToken from '../../utils/auth'
-import { permissionsTypes } from '../user/types';
+import { checkFileType, storage, upload } from '@api/utils/upload'
+import verifyToken from '@api/utils/auth'
+import { permissionsTypes } from '@api/modules/user/types';
 
 router.get('/getAllExpenses', upload.none(), verifyToken([permissionsTypes.admin]),
     async (req, res) => {
@@ -18,9 +18,21 @@ router.get('/getAllExpenses', upload.none(), verifyToken([permissionsTypes.admin
         }
     });
 
+router.get('/getAllExpenses/me', upload.none(), verifyToken([permissionsTypes.admin]),
+    async (req, res) => {
+        try {
+            console.log('gen: ', req.body.user_id)
+            const Expenses = await ExpensesModel.findOne({ user_id: req.body.user_id });
+            res.status(200).json(Expenses);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+
 router.post('/createExpenses', verifyToken([permissionsTypes.endUser, permissionsTypes.admin]),
     async (req, res) => {
         try {
+            console.log('body: ',req.body)
             const { user_id, title, amount } = req.body;
             const newExpenses = new ExpensesModel({ user_id, title, amount });
             const savedExpenses = await newExpenses.save();

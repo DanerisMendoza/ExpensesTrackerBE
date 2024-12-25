@@ -1,6 +1,6 @@
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { permissionsTypes } from '../modules/user/types';
+import { permissionsTypes } from '@api/modules/user/types';
 import { decodedType } from './types';
 
 const verifyToken = (accessRolesRequired: permissionsTypes[]) => {
@@ -25,7 +25,7 @@ const verifyToken = (accessRolesRequired: permissionsTypes[]) => {
                     return res.status(403).json({ message: 'Insufficient permissions' });
                 }
             }
-            req.user_id = decoded.id
+            req.body.user_id = decoded.id
             next();
         });
     };

@@ -8,6 +8,10 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     // "strict": true
+    "baseUrl": "./",
+    "paths": {
+      "@api/*": ["api/*"], // Replace `@utils` with your alias
+    }
   },
   "include": ["api/**/*"]
 }

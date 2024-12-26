@@ -1,4 +1,4 @@
-import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { permissionsTypes } from '@api/modules/user/types';
 import { decodedType } from './types';
@@ -10,13 +10,11 @@ const verifyToken = (accessRolesRequired: permissionsTypes[]) => {
             return res.status(403).json({ message: 'Token is not provided' });
         }
 
-        jwt.verify(token, 'secretKey', (err: JsonWebTokenError | TokenExpiredError, decoded:decodedType) => {
+        jwt.verify(token, 'danerisAccessSecretKey', (err: JsonWebTokenError | null, decoded: unknown) => {
             if (err) {
                 console.error(err);
                 return res.status(401).json({ message: err.name });
             }
-            console.log('decoded: ', decoded)
-            console.log('decode _id: ',decoded.id)
             const requestRole = (decoded as { role: permissionsTypes[] }).role; 
             if (requestRole) {
                 const hasPermission = requestRole.some((role) => accessRolesRequired.includes(role));
@@ -25,7 +23,10 @@ const verifyToken = (accessRolesRequired: permissionsTypes[]) => {
                     return res.status(403).json({ message: 'Insufficient permissions' });
                 }
             }
-            req.body.user_id = decoded.id
+            if(!!decoded){
+                const decodedVal  = decoded as decodedType
+                req.body.user_id = decodedVal.id
+            }
             next();
         });
     };

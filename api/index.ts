@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
+import { Request, Response } from 'express';
 
 // modules route
 import userRoute from './modules/user'
@@ -27,12 +28,12 @@ app.use(
 // Serve Swagger UI
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   customCss:
-    '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }', 
-    customCssUrl: CSS_URL
+    '.swagger-ui .opblock .opblock-summary-path-description-wrapper { align-items: center; display: flex; flex-wrap: wrap; gap: 0 10px; padding: 0 10px; width: 100%; }',
+  customCssUrl: CSS_URL
 }));
 
 // Web View Route
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.send('Dockerized Node JS API based Application with (TS, Swagger and Authentication Feature). Written in Modular Structure for Collaborative Programming');
 });
 

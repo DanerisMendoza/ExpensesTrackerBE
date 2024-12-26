@@ -1,5 +1,6 @@
 const multer = require('multer');
 const path = require('path');
+import { Request, Response, NextFunction } from 'express';
 
 const checkFileType = (file: any, cb: any) => {
     const filetypes = /jpeg|jpg|png|gif/;
@@ -14,17 +15,17 @@ const checkFileType = (file: any, cb: any) => {
 }
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: function (req:Request, file:any, cb:any) {
         cb(null, 'uploads/'); // Set your desired upload directory
     },
-    filename: function (req, file, cb) {
+    filename: function (req:Request, file:any, cb:any) {
         cb(null, file.originalname);
     }
 });
 const upload = multer({
     storage: storage,
     limits: { fileSize: 10000000 },
-    fileFilter: function (req, file, cb) {
+    fileFilter: function (req:Request, file:any, cb:any) {
         checkFileType(file, cb);
     }
 });

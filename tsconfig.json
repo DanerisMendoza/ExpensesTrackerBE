@@ -10,7 +10,8 @@
     "baseUrl": ".",
     "paths": {
       "@api/*": ["api/*"],
-    }
+    },
+    "strict": true
   },
   "include": ["api/**/*"],
   "exclude": ["node_modules"]

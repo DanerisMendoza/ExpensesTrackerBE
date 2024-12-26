@@ -1,0 +1,352 @@
+paths:
+  /login:
+    post:
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: The username of the user.
+                  example: admin
+                password:
+                  type: string
+                  description: The password of the user.
+                  example: 12345678
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    description: The access token for the user session.
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  refreshToken:
+                    type: string
+                    description: The refresh token for session renewal.
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  status:
+                    type: integer
+                    example: 200
+        '401':
+          description: Invalid password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid password
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+  /refreshToken:
+    post:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  description: The refresh token issued to the user.
+              required:
+                - refreshToken
+      responses:
+        "200":
+          description: A new access token was successfully generated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    description: The new access token.
+                  status:
+                    type: integer
+                    example: 200
+        "400":
+          description: Bad Request. The refresh token is missing.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Refresh token is required
+        "403":
+          description: Forbidden. The refresh token is invalid or expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid or expired refresh token
+        "404":
+          description: Not Found. The user associated with the refresh token was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User not found
+        "500":
+          description: Internal Server Error. An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal server error
+
+  /createUser:
+      post:
+        tags:
+          - User
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    description: The unique username of the user
+                    example: naruto
+                  name:
+                    type: string
+                    description: The name of the user
+                    example: naruto uzomaki
+                  email:
+                    type: string
+                    description: The email address of the user
+                    example: naruto@example.com
+                  password:
+                    type: string
+                    description: The password for the user account
+                    example: 12345678
+                  role:
+                    type: array
+                    items:
+                      type: number
+                      enum:
+                        - 0
+                        - 1
+                    description: The role of the user. 0 for admin, 1 for end user.
+                    example: [1]
+        responses:
+          '201':
+            description: User successfully created
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      description: The unique identifier of the created user
+                      example: 60d6f4f8d5f7a233e8b1c2c8
+                    name:
+                      type: string
+                      description: The name of the user
+                      example: John Doe
+                    username:
+                      type: string
+                      description: The username of the user
+                      example: john_doe
+                    email:
+                      type: string
+                      description: The email address of the user
+                      example: john.doe@example.com
+                    role:
+                      type: string
+                      description: The role of the user
+                      example: user
+                    profile_pic_path:
+                      type: string
+                      description: Path to the user's profile picture (if applicable)
+                      example: ''
+          '400':
+            description: Bad Request – Username or Email already exists
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Username already exists!"
+          '500':
+            description: Internal Server Error – If an unexpected error occurs
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: "Server Error"
+  /getUsers:
+    get:
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successfully retrieved the list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      description: The unique identifier of the user
+                      example: 60d6f4f8d5f7a233e8b1c2c8
+                    name:
+                      type: string
+                      description: The name of the user
+                      example: John Doe
+                    username:
+                      type: string
+                      description: The username of the user
+                      example: john_doe
+                    email:
+                      type: string
+                      description: The email address of the user
+                      example: john.doe@example.com
+                    role:
+                      type: string
+                      description: The role of the user (e.g., admin, user)
+                      example: user
+                    profile_pic_path:
+                      type: string
+                      description: Path to the user's profile picture (if applicable)
+                      example: ''
+        '500':
+          description: Internal Server Error – If an unexpected error occurs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Server Error"
+  /deleteAllUsers:
+    delete:
+      operationId: deleteAllUsers
+      tags:
+        - User
+      responses:
+        '200':
+          description: Successfully deleted all users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "All users deleted successfully"
+        '404':
+          description: No users found – If there are no users to delete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "No users found"
+        '500':
+          description: Internal Server Error – If an unexpected error occurs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Server Error"
+  /deleteNonAdminUsers:
+      delete:
+        tags:
+          - User
+        responses:
+          200:
+            description: All non-admin users deleted successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: All users except admin deleted successfully
+                    deletedCount:
+                      type: integer
+                      example: 5
+          404:
+            description: No users found to delete except admin
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: No users found to delete except admin
+          500:
+            description: Server error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Server Error

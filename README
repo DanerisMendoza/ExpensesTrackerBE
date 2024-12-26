@@ -1,0 +1,15 @@
+Run Development locally:
+  npm run build
+  npm run start
+
+Run Build locally:
+  npm run build
+  node dist/index.js
+
+Run in Docker:
+  Docker Compose Up
+  Run All in Docker desktop
+
+Steps to Deploy:
+  npm run build
+  vercel --prod

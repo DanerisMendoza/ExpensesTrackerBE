@@ -92,7 +92,6 @@ router.post('/createUser', upload.none(),
             UserModel.findOne({ $or: [{ username: username }, { email: email }] })
                 .then(existingUser => {
                     if (existingUser) {
-                        console.log(existingUser)
                         if (existingUser.username === username) {
                             return res.status(409).json({ message: 'Username already exists!' });
                         } else if (existingUser.email === email) {

@@ -21,7 +21,6 @@ router.get('/getAllExpenses', upload.none(), verifyToken([permissionsTypes.admin
 router.get('/getAllExpenses/me', upload.none(), verifyToken([permissionsTypes.admin]),
     async (req, res) => {
         try {
-            console.log('gen: ', req.body.user_id)
             const Expenses = await ExpensesModel.findOne({ user_id: req.body.user_id });
             res.status(200).json(Expenses);
         } catch (error) {
@@ -32,7 +31,6 @@ router.get('/getAllExpenses/me', upload.none(), verifyToken([permissionsTypes.ad
 router.post('/createExpenses', verifyToken([permissionsTypes.endUser, permissionsTypes.admin]),
     async (req, res) => {
         try {
-            console.log('body: ',req.body)
             const { user_id, title, amount } = req.body;
             const newExpenses = new ExpensesModel({ user_id, title, amount });
             const savedExpenses = await newExpenses.save();

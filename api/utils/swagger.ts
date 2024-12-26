@@ -60,6 +60,10 @@ const loadSwaggerFiles = (): SwaggerDocument => {
         url: 'http://localhost:3000/api',
         description: 'local server',
       },
+      {
+        url: 'https://node-express-ts-template.vercel.app/api',
+        description: 'vercel server',
+      },
     ],
     paths: mergedPaths,
     components: {

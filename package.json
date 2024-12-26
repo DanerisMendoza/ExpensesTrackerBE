@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc-alias && node copy-yaml.js",
     "start": "nodemon -r tsconfig-paths/register api/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,9 +30,14 @@
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.3.0",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
+    "yaml-loader": "^0.8.1",
     "yamljs": "^0.3.0"
+  },
+  "imports": {
+    "@api/*": "./api/*"
   }
 }

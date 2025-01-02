@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc && tsc-alias && node copy-yaml.js",
     "start": "nodemon -r tsconfig-paths/register -e yaml api/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npm run build && vercel --prod"
   },
   "keywords": [],
   "author": "",

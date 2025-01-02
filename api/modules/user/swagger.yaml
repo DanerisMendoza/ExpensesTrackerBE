@@ -2,7 +2,7 @@ paths:
   /login:
     post:
       tags:
-        - User
+        - Auth
       requestBody:
         required: true
         content:
@@ -73,7 +73,7 @@ paths:
   /refreshToken:
     post:
       tags:
-        - User
+        - Auth
       requestBody:
         content:
           application/json:

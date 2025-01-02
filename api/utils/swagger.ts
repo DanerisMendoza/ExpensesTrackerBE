@@ -31,18 +31,17 @@ interface Server {
 
 const loadSwaggerFiles = (): SwaggerDocument => {
   const modulesDir = path.join(__dirname, '../modules');
-  const modules = fs.readdirSync(modulesDir);
-
-  const swaggerDocs: SwaggerDocument[] = modules
-    .map((module) => {
-      const swaggerPath = path.join(modulesDir, module, 'swagger.yaml');
-      if (fs.existsSync(swaggerPath)) {
-        return YAML.load(swaggerPath) as SwaggerDocument;
-      }
-      return null;
-    })
-    .filter((doc): doc is SwaggerDocument => doc !== null);
-
+  const swaggerPaths = [
+    path.join(modulesDir, 'user', 'swagger.yaml'),
+    path.join(modulesDir, 'expenses', 'swagger.yaml'),
+  ];
+  const swaggerDocs: SwaggerDocument[] = []; 
+  swaggerPaths.forEach((swaggerPath) => {
+    if (fs.existsSync(swaggerPath)) {
+      const doc = YAML.load(swaggerPath);
+      swaggerDocs.push(doc);
+    }
+  });
   const mergedPaths = swaggerDocs.reduce((acc, doc) => ({ ...acc, ...doc.paths }), {});
 
   return {
@@ -71,7 +70,7 @@ const loadSwaggerFiles = (): SwaggerDocument => {
         BearerAuth: {
           type: 'http',
           scheme: 'bearer',
-          bearerFormat: 'JWT', // Optional, adds clarity for the token format
+          bearerFormat: 'JWT', 
         },
       },
     },

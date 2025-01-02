@@ -9,7 +9,6 @@ const verifyToken = (accessRolesRequired: permissionsTypes[]) => {
         if (!token) {
             return res.status(403).json({ message: 'Token is not provided' });
         }
-
         jwt.verify(token, 'danerisAccessSecretKey', (err: JsonWebTokenError | null, decoded: unknown) => {
             if (err) {
                 console.error(err);
@@ -23,7 +22,8 @@ const verifyToken = (accessRolesRequired: permissionsTypes[]) => {
                     return res.status(403).json({ message: 'Insufficient permissions' });
                 }
             }
-            if(!!decoded){
+            // add user_id using the decoded token if there is no user_id in body
+            if(!!decoded && !!!req.body.user_id){
                 const decodedVal  = decoded as decodedType
                 req.body.user_id = decodedVal.id
             }

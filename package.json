@@ -4,7 +4,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "tsc && tsc-alias && node copy-yaml.js",
-    "start": "nodemon -r tsconfig-paths/register -e yaml api/index.ts",
+    "start": "nodemon -r tsconfig-paths/register -e ts,js,json,yaml api/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "npm run build && vercel --prod"
   },
@@ -43,5 +43,8 @@
   },
   "imports": {
     "@api/*": "./api/*"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.3.0"
   }
 }

@@ -150,3 +150,71 @@ paths:
                     type: string
         "500":
           description: Server error
+
+  /seederExpenses/me:
+    post:
+      tags:
+        - Expenses
+      security:
+        - BearerAuth: []
+      requestBody:
+        description: The user ID for which the expenses are being created.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: The ID of the user for whom the expenses are being created.
+                  example: ""
+      responses:
+        '200':
+          description: Expenses created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Expenses created successfully!'
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: string
+                          description: The user ID of the created expense record.
+                        title:
+                          type: string
+                          description: The title/description of the expense.
+                        amount:
+                          type: number
+                          format: float
+                          description: The amount of the expense.
+                        _id:
+                          type: string
+                          description: The unique ID of the expense record.
+        '400':
+          description: Bad request (invalid or missing user_id)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'User ID is required.'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Internal server error.'

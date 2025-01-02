@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 
+const { faker } = require('@faker-js/faker');
 import { Request, Response, NextFunction } from 'express';
 import { ExpensesModel } from './model'
 import { checkFileType, storage, upload } from '@api/utils/upload'
@@ -46,6 +47,26 @@ router.delete('/deleteAllExpenses', verifyToken([permissionsTypes.admin]),
         try {
             await ExpensesModel.deleteMany();
             res.status(200).json({ message: 'All expenses deleted successfully!' });
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+
+router.post('/seederExpenses/me', verifyToken([permissionsTypes.admin]),
+    async (req: Request, res: Response) => {
+        try {
+            const user_id = req.body.user_id; // Ensure user_id is coming from the request body
+            const seeder = Array.from({ length: 50 }, () => {
+                return {
+                    user_id: user_id,
+                    title: faker.commerce.productName(),
+                    amount: parseFloat(faker.commerce.price())
+                };
+            });
+
+            // Use insertMany for bulk creation
+            const savedExpenses = await ExpensesModel.insertMany(seeder);
+            res.status(200).json({ message: 'Expenses created successfully!', data: savedExpenses });
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }

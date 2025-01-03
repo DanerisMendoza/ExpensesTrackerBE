@@ -6,6 +6,7 @@ mongoose.connect(mongoDatabaseURL)
 const ExpensesSchema = new mongoose.Schema({
     user_id: String,
     title: String,
+    spent_at: Date,
     amount: Number,
 }, { timestamps: true })
 const ExpensesModel = mongoose.model("expenses", ExpensesSchema)

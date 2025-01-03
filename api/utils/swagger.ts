@@ -33,6 +33,7 @@ const loadSwaggerFiles = (): SwaggerDocument => {
   const modulesDir = path.join(__dirname, '../modules');
   const swaggerPaths = [
     path.join(modulesDir, 'user', 'swagger.yaml'),
+    path.join(modulesDir, 'analytics', 'swagger.yaml'),
     path.join(modulesDir, 'expenses', 'swagger.yaml'),
   ];
   const swaggerDocs: SwaggerDocument[] = []; 

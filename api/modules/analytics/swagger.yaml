@@ -1,0 +1,124 @@
+paths:
+  paths:
+    /analytics/totalAndAverage:
+        get:
+          tags:
+            - Analytics
+          responses:
+            200:
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      total:
+                        type: number
+                        example: 10000
+                      average:
+                        type: number
+                        example: 250
+            500:
+              description: Internal server error.
+
+  /analytics/totalAndAverage:
+    get:
+      tags:
+        - Analytics
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: number
+                    example: 10000
+                  average:
+                    type: number
+                    example: 250
+        500:
+          description: Internal server error.
+
+  /analytics/monthlySpending:
+    get:
+      tags:
+        - Analytics
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: integer
+                      example: 1
+                    total:
+                      type: number
+                      example: 2000
+        500:
+          description: Internal server error.
+
+  /analytics/topSpenders:
+    get:
+      tags:
+        - Analytics
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: "user123"
+                    total:
+                      type: number
+                      example: 5000
+        500:
+          description: Internal server error.
+
+  /analytics/spendingFrequency:
+    get:
+      tags:
+        - Analytics
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      example: "user456"
+                    frequency:
+                      type: integer
+                      example: 8
+        500:
+          description: Internal server error.
+
+  /analytics/expensesCount:
+    get:
+      tags:
+        - Analytics
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 1000
+        500:
+          description: Internal server error.

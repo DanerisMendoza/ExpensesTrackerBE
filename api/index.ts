@@ -9,6 +9,7 @@ import { Request, Response } from 'express';
 // modules route
 import userRoute from './modules/user'
 import expensesRoute from './modules/expenses'
+import analyticsRoute from './modules/analytics'
 
 // swagger config
 import swaggerUi from 'swagger-ui-express';
@@ -41,6 +42,7 @@ app.get('/', (req: Request, res: Response) => {
 const router = express.Router();
 router.use(userRoute);
 router.use(expensesRoute);
+router.use(analyticsRoute);
 app.use('/api', router);
 
 app.listen(PORT, () => {

@@ -10,7 +10,7 @@ import { permissionsTypes, userType } from './types';
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { decodedType } from '@api/utils/types';
 
-router.post('/login', upload.none(),
+router.post('/login', 
     async (req: Request, res: Response) => {
         try {
             const { username, password } = req.body;
@@ -78,7 +78,7 @@ router.post('/refreshToken', async (req: Request, res: Response) => {
 });
 
 
-router.post('/createUser', upload.none(),
+router.post('/createUser', 
     async (req: Request, res: Response) => {
         const { username, name, password, role, email } = req.body;
         bcrypt.hash(password, 10, (err: Error, hashedPassword: string) => {
@@ -121,7 +121,7 @@ router.post('/createUser', upload.none(),
         });
     });
 
-router.get('/getUsers', upload.none(), verifyToken([permissionsTypes.admin]),
+router.get('/getUsers',  verifyToken([permissionsTypes.admin]),
     async (req: Request, res: Response) => {
         UserModel.find({}).then((result: [Object] | []) => {
             return res.json(result)
@@ -130,7 +130,7 @@ router.get('/getUsers', upload.none(), verifyToken([permissionsTypes.admin]),
         })
     });
 
-router.delete('/deleteAllUsers', upload.none(), verifyToken([permissionsTypes.admin]),
+router.delete('/deleteAllUsers',  verifyToken([permissionsTypes.admin]),
     async (req:Request, res:Response) => {
         UserModel.deleteMany({})
             .then((deletedUsers:any) => {
@@ -145,7 +145,7 @@ router.delete('/deleteAllUsers', upload.none(), verifyToken([permissionsTypes.ad
             });
     });
 
-router.delete('/deleteNonAdminUsers', upload.none(), verifyToken([permissionsTypes.admin]),
+router.delete('/deleteNonAdminUsers',  verifyToken([permissionsTypes.admin]),
     async (req:Request, res:Response) => {
         UserModel.deleteMany({ username: { $ne: 'admin' } })
             .then((deletedUsers:any) => {

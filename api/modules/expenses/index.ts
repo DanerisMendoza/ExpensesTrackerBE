@@ -91,7 +91,7 @@ router.delete('/deleteAllExpenses', verifyToken([permissionsTypes.admin]),
         }
     });
 
-router.delete('/deleteExpenseById/:id', verifyToken([permissionsTypes.admin]),
+router.delete('/deleteExpenseById/:id', verifyToken([permissionsTypes.admin, permissionsTypes.endUser]),
     async (req: Request, res: Response) => {
         const { id } = req.params;
         try {
@@ -102,6 +102,37 @@ router.delete('/deleteExpenseById/:id', verifyToken([permissionsTypes.admin]),
             }
 
             res.status(200).json({ message: 'Expense deleted successfully!' });
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+
+router.put('/updateExpenseById/:id', verifyToken([permissionsTypes.admin, permissionsTypes.endUser]),
+    async (req: Request, res: Response) => {
+        const { id } = req.params;
+        const updates = req.body; // Extract all updates from request body
+
+        try {
+            // Check if the request body contains any fields to update
+            if (!Object.keys(updates).length) {
+                return res.status(400).json({ message: 'No fields provided to update' });
+            }
+
+            const updatedExpense = await ExpensesModel.findByIdAndUpdate(
+                id,
+                { $set: updates }, // Apply all provided updates
+                { new: true, runValidators: true } // Return updated document and validate
+            );
+
+            // If no expense is found, return 404
+            if (!updatedExpense) {
+                return res.status(404).json({ message: 'Expense not found' });
+            }
+
+            res.status(200).json({
+                message: 'Expense updated successfully!',
+                data: updatedExpense,
+            });
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }

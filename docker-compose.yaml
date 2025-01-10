@@ -1,8 +1,8 @@
-name: node-react-template
+name: expenses-tracker
 services:
   backend:
     build: ./
-    container_name: node-express-ts-template
+    container_name: expenses-tracker-BE
     ports:
       - "9000:3000"
     volumes:
@@ -10,12 +10,12 @@ services:
       - /app/node_modules
 
   frontend:
-    build: ../react-vite-mantine-template
-    container_name: react-vite-mantine-template
+    build: ../ExpensesTrackerFE
+    container_name: expenses-tracker-FE
     ports:
       - "8000:5173"
     volumes:
-      - ../react-vite-mantine-template:/app
+      - ../ExpensesTrackerFE:/app
       - /app/node_modules
     environment:
       - VITE_API_BASE_URL=http://localhost:9000/

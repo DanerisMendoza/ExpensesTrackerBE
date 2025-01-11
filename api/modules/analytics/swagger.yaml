@@ -1,73 +1,72 @@
 paths:
-  paths:
-    /analytics/totalAndAverage:
-        get:
-          tags:
-            - Analytics
-          responses:
-            200:
-              content:
-                application/json:
-                  schema:
-                    type: object
-                    properties:
-                      total:
-                        type: number
-                        example: 10000
-                      average:
-                        type: number
-                        example: 250
-            500:
-              description: Internal server error.
-
-  /analytics/totalAndAverage:
+  /analytics/user/{userId}/totalAmount:
     get:
+      summary: Get total expense amount for a user
+      description: Returns the total amount of expenses for a specific user.
       tags:
         - Analytics
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: string
       responses:
         200:
+          description: Total expense amount
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  total:
+                  totalAmount:
                     type: number
-                    example: 10000
-                  average:
-                    type: number
-                    example: 250
+                    description: Total amount of expenses
         500:
-          description: Internal server error.
-
-  /analytics/monthlySpending:
+          description: Server error
+  /analytics/user/{userId}/averageAmount:
     get:
+      summary: Get average expense amount for a user
+      description: Returns the average amount of expenses for a specific user.
       tags:
         - Analytics
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: string
       responses:
         200:
+          description: Average expense amount
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    _id:
-                      type: integer
-                      example: 1
-                    total:
-                      type: number
-                      example: 2000
+                type: object
+                properties:
+                  averageAmount:
+                    type: number
+                    description: Average amount of expenses
         500:
-          description: Internal server error.
-
-  /analytics/topSpenders:
+          description: Server error
+  /analytics/user/{userId}/monthlyExpenses:
     get:
+      summary: Get monthly expenses breakdown for a user
+      description: Returns the total expenses for a user grouped by month.
       tags:
         - Analytics
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: string
       responses:
         200:
+          description: Monthly expenses breakdown
           content:
             application/json:
               schema:
@@ -77,19 +76,38 @@ paths:
                   properties:
                     _id:
                       type: string
-                      example: "user123"
-                    total:
+                      description: Month and year in YYYY-MM format
+                    totalAmount:
                       type: number
-                      example: 5000
+                      description: Total amount of expenses for the month
+                    count:
+                      type: integer
+                      description: Number of expenses for the month
         500:
-          description: Internal server error.
-
-  /analytics/spendingFrequency:
+          description: Server error
+  /analytics/user/{userId}/topExpenses:
     get:
+      summary: Get top N expensive expenses for a user
+      description: Returns the top N most expensive expenses for a specific user.
       tags:
         - Analytics
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Number of top expenses to return
+          schema:
+            type: integer
+            default: 5
       responses:
         200:
+          description: Top N expensive expenses
           content:
             application/json:
               schema:
@@ -99,26 +117,19 @@ paths:
                   properties:
                     _id:
                       type: string
-                      example: "user456"
-                    frequency:
-                      type: integer
-                      example: 8
+                      description: Expense ID
+                    user_id:
+                      type: string
+                      description: ID of the user
+                    title:
+                      type: string
+                      description: Title of the expense
+                    amount:
+                      type: number
+                      description: Amount of the expense
+                    spent_at:
+                      type: string
+                      format: date-time
+                      description: Date when the expense was made
         500:
-          description: Internal server error.
-
-  /analytics/expensesCount:
-    get:
-      tags:
-        - Analytics
-      responses:
-        200:
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                    example: 1000
-        500:
-          description: Internal server error.
+          description: Server error

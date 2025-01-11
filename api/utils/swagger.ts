@@ -61,7 +61,7 @@ const loadSwaggerFiles = (): SwaggerDocument => {
         description: 'local server',
       },
       {
-        url: 'https://node-express-ts-template.vercel.app/api',
+        url: 'https://expenses-tracker-be.vercel.app/api',
         description: 'vercel server',
       },
     ],
